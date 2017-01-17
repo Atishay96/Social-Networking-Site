@@ -1,9 +1,27 @@
 <?php
 if(!$_SESSION['user_id'])
-{
-	header('Location: index.php');
+	{
+		header('Location: index.php');
+	}
+	if(isset($_POST['comment']))
+	{
+		$comment=$_POST['comment'];
+		if(!empty($comment))
+		{
+			$query7="INSERT INTO comment VALUES ('',".$query_result3.",".$comment.",".getuserfield('Id').")";
+			$query_run7=mysql_query($query7);
+			if($query_run7)
+			{
+				echo "done";
+			}
+			else
+				echo "error 1";
+		}
+		else
+		{
+			echo 'error 2';
+		}
 }
-
 ?>
 <!DOCTYPE html>
 	<html>
@@ -37,7 +55,12 @@ if(!$_SESSION['user_id'])
 			  		font-weight: bold;
 			  		margin:20px 0px 0px 45px;
 			  	}
+			  	.small
+			  	{
+			  		font-size:15px;
+			  	}
  			</style>
+
  		</head>
  		<body>
  		<div class="container-fluid">
@@ -59,7 +82,7 @@ if(!$_SESSION['user_id'])
 		 				<div class="container" style="margin:10px;">
 			 				<?php
 			 					$id = getuserfield("Id");
-			 					$query="SELECT post FROM post WHERE 1";
+			 					$query="SELECT * FROM post WHERE 1";
 			 					$query1="SELECT id FROM post";
 			 					$query_run= mysql_query($query);
 			 					$x = mysql_num_rows($query_run);
@@ -68,13 +91,30 @@ if(!$_SESSION['user_id'])
 			 					{	
 			 						$query_result1 = mysql_result($query_run1,$x,'id');
 			 						$query_result = mysql_result($query_run,$x,'post');
+			 						$query_result3 = mysql_result($query_run,$x,'post_id');
 			 						if(friends($id,$query_result1)||$id==$query_result1 )
 			 						{
 				 						
-				 						echo '<a href="#"><h3>'.getuserfieldf($query_result1).' '.getuserfieldl($query_result1).'</h2></a>';
-					 					
+				 						echo '<a href="#"><h3>'.getuserfieldf($query_result1).' '.getuserfieldl($query_result1).'</h2></a>';	 					
 					 					echo $query_result.'<br/>';
-					 					echo '<a>Like </a><a>Comment</a>';
+					 					echo '<a href="#" id="like">Like </a><a href="#small" id="comment">comment</a>';
+					 					
+			 							$query4="SELECT * FROM comment WHERE post_id='".$query_result3."'";
+			 							$query_run4=mysql_query($query4);
+			 							$y = mysql_num_rows($query_run4);
+			 							while($y--)
+			 							{
+			 								$query_result4 = mysql_result($query_run4,$y,'comment');
+			 								$query_result5 = mysql_result($query_run4,$y,'user_id');
+			 								echo '<div class="container" id="small"> &nbsp; &nbsp; &nbsp;'.'<a href=#>'.getuserfieldf($query_result5).' '.getuserfieldl($query_result5).'</a> '.$query_result4.'</div>';
+			 							}
+						 				?>
+						 				<form class="form-inline" action="home.php" method="POST">
+					 						<br/>&nbsp; &nbsp; &nbsp;
+					 						<input type="text"  name="comment" placeholder="Enter your Comment">&nbsp;
+					 						<input type="submit" class="btn btn-primary" value="POST">
+					 					</form> 						
+										<?php		
 				 					}	
 			 					}	
 			 					
