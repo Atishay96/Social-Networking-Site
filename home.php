@@ -1,28 +1,11 @@
 <?php
 if(!$_SESSION['user_id'])
-	{
+{
 		header('Location: index.php');
-	}
-	if(isset($_POST['comment']))
-	{
-		$comment=$_POST['comment'];
-		if(!empty($comment))
-		{
-			$query7="INSERT INTO comment VALUES ('',".$query_result3.",".$comment.",".getuserfield('Id').")";
-			$query_run7=mysql_query($query7);
-			if($query_run7)
-			{
-				echo "done";
-			}
-			else
-				echo "error 1";
-		}
-		else
-		{
-			echo 'error 2';
-		}
 }
+
 ?>
+
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -60,7 +43,7 @@ if(!$_SESSION['user_id'])
 			  		font-size:15px;
 			  	}
  			</style>
-
+ 		
  		</head>
  		<body>
  		<div class="container-fluid">
@@ -74,7 +57,7 @@ if(!$_SESSION['user_id'])
 		 		</div>
 		 		<div class="col-sm-8">
 		 			<div class="middle-part">
-		 				<form class="form-horizontal container" action="post.php" method="POST">
+		 				<form class="form-horizontal container" action="post.php" method="post">
 		 					<input type="text" name="w_area" placeholder="What's Up?" style=" text-align:left; width:60%; height:90px; margin:0px 0px 0px 0px;" required><br/>
 		 					<input type="submit" class="btn btn-primary" Value="POST" style="margin:10px 0px 0px 615px">
 		 				</form>
@@ -92,11 +75,18 @@ if(!$_SESSION['user_id'])
 			 						$query_result1 = mysql_result($query_run1,$x,'id');
 			 						$query_result = mysql_result($query_run,$x,'post');
 			 						$query_result3 = mysql_result($query_run,$x,'post_id');
-			 						if(friends($id,$query_result1)||$id==$query_result1 )
+			 						if(friends($id,$query_result1)||$id==$query_result1)
 			 						{
-				 						
-				 						echo '<a href="#"><h3>'.getuserfieldf($query_result1).' '.getuserfieldl($query_result1).'</h2></a>';	 					
-					 					echo $query_result.'<br/>';
+				 						if(file_exists('dp/'.$query_result1.'.jpg')==TRUE)
+										{
+											echo '<img src="dp/'.$query_result1.'.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;"> ';
+										}
+										else
+										{
+											echo '<img src="dp/default.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;">';
+										}
+				 						echo '<a href="#">'.getuserfieldf($query_result1).' '.getuserfieldl($query_result1).'</a>';	 					
+					 					echo ' '.$query_result.'<br/>';
 					 					echo '<a href="#" id="like">Like </a><a href="#small" id="comment">comment</a>';
 					 					
 			 							$query4="SELECT * FROM comment WHERE post_id='".$query_result3."'";
@@ -104,17 +94,46 @@ if(!$_SESSION['user_id'])
 			 							$y = mysql_num_rows($query_run4);
 			 							while($y--)
 			 							{
+			 								clearstatcache();
 			 								$query_result4 = mysql_result($query_run4,$y,'comment');
 			 								$query_result5 = mysql_result($query_run4,$y,'user_id');
-			 								echo '<div class="container" id="small"> &nbsp; &nbsp; &nbsp;'.'<a href=#>'.getuserfieldf($query_result5).' '.getuserfieldl($query_result5).'</a> '.$query_result4.'</div>';
+			 								echo '<div class="container" id="small"> &nbsp; &nbsp; &nbsp;';
+			 								if(file_exists('dp/'.$query_result5.'.jpg')==TRUE)
+											{
+												echo '<img src="dp/'.$query_result5.'.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;"> ';
+											}
+											else
+											{
+												echo '<img src="dp/default.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;">';
+											}
+			 								echo '<a href=#>'.getuserfieldf($query_result5).' '.getuserfieldl($query_result5).'</a> '.$query_result4.'</div>';
 			 							}
 						 				?>
-						 				<form class="form-inline" action="home.php" method="POST">
-					 						<br/>&nbsp; &nbsp; &nbsp;
-					 						<input type="text"  name="comment" placeholder="Enter your Comment">&nbsp;
+						 				<form class="form-inline" action="" method="POST">
+					 						<br/>
+					 						<input type="text"  id="comment" name="comment" placeholder="Enter your Comment">&nbsp;
 					 						<input type="submit" class="btn btn-primary" value="POST">
-					 					</form> 						
-										<?php		
+					 					</form>
+
+										<?php
+										if(isset($_POST['comment']))
+										{
+										    $comment=$_POST['comment'];
+										    $idz=getuserfield('Id');
+										    
+											if(!empty($comment))
+											{
+												$query7="INSERT INTO comment VALUES ('','$query_result3','$comment','$idz')";
+												$query_run7=mysql_query($query7);
+												if($query_run7)
+												{
+													
+													 header('location:home.php');
+													
+												}
+												
+											}
+										}		
 				 					}	
 			 					}	
 			 					
