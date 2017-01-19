@@ -42,7 +42,13 @@ if(!$_SESSION['user_id'])
 			  	{
 			  		font-size:15px;
 			  	}
+			  	.likes_names
+			  	{
+			  		font-size:15px;
+			  		color:grey;
+			  	}
  			</style>
+ 			
  		
  		</head>
  		<body>
@@ -87,6 +93,54 @@ if(!$_SESSION['user_id'])
 										}
 				 						echo '<a href="#">'.getuserfieldf($query_result1).' '.getuserfieldl($query_result1).'</a>';	 					
 					 					echo ' '.$query_result.'<br/>';
+					 					$query_like = "SELECT * FROM likes WHERE post_id='".$query_result3."'";
+					 					$query_like_run=mysql_query($query_like);
+					 					if($query_like_run)
+					 					{
+					 						echo '<a href="#"><div class="likes_names" data-toggle="modal" data-target="#myModal">'.$query_like_num_rows = mysql_num_rows($query_like_run).' likes</div></a>';
+					 					}?>
+					 					<div class="modal fade" id="myModal" style="font-size:20px;">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close btn-info btn-lg" data-dismiss="modal" style="font-family:Times-new-roman;">&times;</button>
+												</div>
+												<div class="modal-body">
+							
+						 							<?php
+
+						 						 	$query_likes_names = "SELECT * FROM likes WHERE post_id='".$query_result3."'";
+						 						 	$query_likes_names_run=mysql_query($query_likes_names);
+						 						 	$u=mysql_num_rows($query_likes_names_run);
+						 						 	while($u--)
+						 						 	{
+							 						 	if($query_likes_names)
+							 						 	{
+							 						 		$query_likes_names_result=mysql_result($query_likes_names_run, $u,'id');
+							 						 		if($query_likes_names_result)
+							 						 		{
+							 						 			if(file_exists('dp/'.$query_likes_names_result.'.jpg')==TRUE)
+																{
+																	echo '<img src="dp/'.$query_likes_names_result.'.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;"> ';
+																}
+																else
+																{
+																	echo '<img src="dp/default.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;">';
+																}
+								 								echo '<a href=#>'.getuserfieldf($query_likes_names_result).' '.getuserfieldl($query_likes_names_result).'</a><br/>';
+							 						 		}
+							 						 		else
+							 						 		{
+							 						 			echo "error";
+							 						 		}
+
+							 						 	}
+						 						 	}	
+						 						 	?>
+
+												</div>
+											</div>
+										</div>
+										<?php
 					 					echo '<a href="#" id="like">Like </a><a href="#small" id="comment">comment</a>';
 					 					
 			 							$query4="SELECT * FROM comment WHERE post_id='".$query_result3."'";
@@ -113,7 +167,7 @@ if(!$_SESSION['user_id'])
 					 						<br/>
 					 						<input type="text"  id="comment" name="comment" placeholder="Enter your Comment">&nbsp;
 					 						<input type="submit" class="btn btn-primary" value="POST">
-					 					</form>
+					 					</form><br/>
 
 										<?php
 										if(isset($_POST['comment']))
