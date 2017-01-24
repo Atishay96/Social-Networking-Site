@@ -59,6 +59,7 @@ if(!$_SESSION['user_id'])
 						 				<a href="home.php">Home</a><br/>
 						 				<a href="#">Messages</a><br/>
 						 				<a href="account.php">Account</a><br/>
+						 				<a href="people.php">People</a><br/>
 		 			</aside>
 		 		</div>
 		 		<div class="col-sm-8">
@@ -83,6 +84,7 @@ if(!$_SESSION['user_id'])
 			 						$query_result3 = mysql_result($query_run,$x,'post_id');
 			 						if(friends($id,$query_result1)||$id==$query_result1)
 			 						{
+
 				 						if(file_exists('dp/'.$query_result1.'.jpg')==TRUE)
 										{
 											echo '<img src="dp/'.$query_result1.'.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;"> ';
@@ -97,58 +99,80 @@ if(!$_SESSION['user_id'])
 					 					$query_like_run=mysql_query($query_like);
 					 					if($query_like_run)
 					 					{
-					 						echo '<a href="#"><div class="likes_names" data-toggle="modal" data-target="#myModal">'.$query_like_num_rows = mysql_num_rows($query_like_run).' likes</div></a>';
-					 					}?>
-					 					<div class="modal fade" id="myModal" style="font-size:20px;">
-											<div class="modal-content">
-												<div class="modal-header">
-													<button type="button" class="close btn-info btn-lg" data-dismiss="modal" style="font-family:Times-new-roman;">&times;</button>
-												</div>
-												<div class="modal-body">
-							
-						 							<?php
-
-						 						 	$query_likes_names = "SELECT * FROM likes WHERE post_id='".$query_result3."'";
-						 						 	$query_likes_names_run=mysql_query($query_likes_names);
-						 						 	$u=mysql_num_rows($query_likes_names_run);
-						 						 	while($u--)
-						 						 	{
-							 						 	if($query_likes_names)
-							 						 	{
-							 						 		$query_likes_names_result=mysql_result($query_likes_names_run, $u,'id');
-							 						 		if($query_likes_names_result)
-							 						 		{
-							 						 			if(file_exists('dp/'.$query_likes_names_result.'.jpg')==TRUE)
-																{
-																	echo '<img src="dp/'.$query_likes_names_result.'.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;"> ';
-																}
-																else
-																{
-																	echo '<img src="dp/default.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;">';
-																}
-								 								echo '<a href=#>'.getuserfieldf($query_likes_names_result).' '.getuserfieldl($query_likes_names_result).'</a><br/>';
-							 						 		}
-							 						 		else
-							 						 		{
-							 						 			echo "error";
-							 						 		}
-
-							 						 	}
-						 						 	}	
-						 						 	?>
-
-												</div>
-											</div>
+					 						$name_like = $query_result3;
+					 						echo '<a href="#"><div id="xyz" class="likes_names" data-id=".'.$name_like.'" data-toggle="modal" data-target="#myModal">'.$query_like_num_rows = mysql_num_rows($query_like_run).' likes</div></a>';
+									 						?>
+									 <div class="modal fade" id="myModal" style="font-size:20px;">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close btn-info btn-lg" data-dismiss="modal" style="font-family:Times-new-roman;">&times;</button>
 										</div>
+										<div class="modal-body">
+											<script>
+													$(document).ready(function(){
+									 				$(".likes_names").click(function(){
+									 					
+									 					var qw = $(this).attr("data-id");
+									 					
+												    	}); 
+									 				});
+									 			 
+									 		
+											 </script>										 					
+					 			
+					 		  		
+												<?php		
+																												 							
+												echo $qwe =$name_like;
+											 	$query_likes_names = "SELECT * FROM likes WHERE post_id='".$qwe."'";
+
+											 	$query_likes_names_run=mysql_query($query_likes_names);
+											 	$u=mysql_num_rows($query_likes_names_run);
+											 	while($u--)
+											 	{
+											 		
+					 						 	if($query_likes_names)
+					 						 	{
+
+
+					 						 		$query_likes_names_result=mysql_result($query_likes_names_run, $u,'id');
+					 						 		if($query_likes_names_result)
+					 						 		{
+					 						 			if(file_exists('dp/'.$query_likes_names_result.'.jpg')==TRUE)
+														{
+															echo '<img src="dp/'.$query_likes_names_result.'.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;"> ';
+														}
+														else
+														{
+															echo '<img src="dp/default.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;">';
+														}
+						 								echo '<a href=# class="">'.getuserfieldf($query_likes_names_result).' '.getuserfieldl($query_likes_names_result).'</a><br/>';
+					 						 		}
+					 						 		else
+					 						 		{
+					 						 			echo "error";
+					 						 		}
+
+					 						 	}
+											 	}
+											 	?>
+											 	
+										</div>
+									</div>
+								</div>
+
+								<?php
+					 					}					 					
+					 					?>
+
 										<?php
-					 					echo '<a href="#" id="like">Like </a><a href="#small" id="comment">comment</a>';
+					 					echo '<a href="#" class="like">Like </a><a href="#small" id="comment">comment</a>';
 					 					
 			 							$query4="SELECT * FROM comment WHERE post_id='".$query_result3."'";
 			 							$query_run4=mysql_query($query4);
 			 							$y = mysql_num_rows($query_run4);
 			 							while($y--)
 			 							{
-			 								clearstatcache();
 			 								$query_result4 = mysql_result($query_run4,$y,'comment');
 			 								$query_result5 = mysql_result($query_run4,$y,'user_id');
 			 								echo '<div class="container" id="small"> &nbsp; &nbsp; &nbsp;';
@@ -160,46 +184,61 @@ if(!$_SESSION['user_id'])
 											{
 												echo '<img src="dp/default.jpg" alt="dp" style="width:50px;height:50px;border-radius:10px;">';
 											}
-			 								echo '<a href=#>'.getuserfieldf($query_result5).' '.getuserfieldl($query_result5).'</a> '.$query_result4.'</div>';
+			 								echo '<a href=# class="">'.getuserfieldf($query_result5).' '.getuserfieldl($query_result5).'</a> '.$query_result4.'</div>';
 			 							}
 						 				?>
+						 				
 						 				<form class="form-inline" action="" method="POST">
-					 						<br/>
+					 						
 					 						<input type="text"  id="comment" name="comment" placeholder="Enter your Comment">&nbsp;
-					 						<input type="submit" class="btn btn-primary" value="POST">
+					 						<input type="submit" class="btn btn-primary" value="POST" id="com" >
+					 						<input type="hidden" name="qr" value="<?php echo $query_result3;?>">
+					 											 			 						
 					 					</form><br/>
-
-										<?php
-										if(isset($_POST['comment']))
-										{
-										    $comment=$_POST['comment'];
-										    $idz=getuserfield('Id');
-										    
-											if(!empty($comment))
-											{
-												$query7="INSERT INTO comment VALUES ('','$query_result3','$comment','$idz')";
-												$query_run7=mysql_query($query7);
-												if($query_run7)
-												{
-													
-													 header('location:home.php');
-													
-												}
-												
-											}
-										}		
+					 					<?php	
+					 						
 				 					}	
-			 					}	
-			 					
+			 					}				 					
 			 				?>
 		 				</div>
+		 				<script>
+					 							$(document).ready(function(){
+					 								$("#com").click(function(){
+														<?php
+														if(isset($_POST['comment']))
+														{
+														    $comment=$_POST['comment'];
+														    $idz=getuserfield('Id');
+														    echo "asdqwe";
+														    echo $qr = $_POST['qr'];
+															if(!empty($comment))
+															{
 
+																$query7="INSERT INTO comment VALUES ('','$qr','$comment','$idz')";
+																$query_run7=mysql_query($query7);
+																if($query_run7)
+																{
+																	
+																	 header('location:home.php');
+																	
+																}
+																
+															}
+														}?>
+													});
+													
+
+					 							});
+					 					</script>
+		 				
 		 			</div>
 		 		</div>
 		 		<div class="col-sm-3">
 		 		</div>
 	 		</div>
  		</div>
+ 		
+					
 			<footer class="container-fluid bg-4">
 				<p>&copy copyrighted to Atishay Jain</p> 
 			</footer>
